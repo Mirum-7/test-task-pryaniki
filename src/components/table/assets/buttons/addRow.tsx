@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useAddRowMutation } from '../../../../store/slices/table';
 
 function AddRowButton () {
@@ -14,14 +14,20 @@ function AddRowButton () {
   }
 
   const [
-    addRow
+    addRow,
+    { isLoading }
   ] = useAddRowMutation();
 
 
   return (
-    <Button onClick={() => {
+    <LoadingButton 
+    loading={isLoading}
+    onClick={() => {
       addRow(testdata);
-    }}>Добавить</Button>
+    }}
+    >
+      Добавить
+    </LoadingButton>
   )
 }
 

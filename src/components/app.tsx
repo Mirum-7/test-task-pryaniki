@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import urls from '../urls';
 import LoginPage from '../pages/login';
 import MainPage from '../pages/main';
-import Layout from './layout';
 import AuthProvider from '../providers/auth';
+import StoreProvider from '../providers/store';
+import urls from '../urls';
+import Layout from './layout';
 import PrivateRoute from './routes/private';
 import PublicRoute from './routes/public';
-import StoreProvider from '../providers/store';
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
             </Routes>
           </Layout>
         </BrowserRouter>
-      </StoreProvider>
+    </StoreProvider>
     </AuthProvider>
   );
 }

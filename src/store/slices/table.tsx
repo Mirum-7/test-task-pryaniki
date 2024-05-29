@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import routes from '../../routes';
-import { responseGetType } from '../../types/response';
+import { responseAddType, responseGetType, responseRemoveType } from '../../types/response';
 import { TableElementType } from '../../types/table';
 
 
@@ -32,16 +32,16 @@ const tableApi = createApi({
       }),
       providesTags: ['table'],
     }),
-    addRow: builder.mutation({
-      query: (row: Omit<TableElementType, 'id'>) => ({
+    addRow: builder.mutation<responseAddType, Omit<TableElementType, 'id'>>({
+      query: (row) => ({
         url: 'create',
         method: 'POST',
         body: row,
       }),
       invalidatesTags: ['table'],
     }),
-    removeRow: builder.mutation({
-      query: (id: TableElementType['id']) => ({
+    removeRow: builder.mutation<responseRemoveType, TableElementType['id']>({
+      query: (id) => ({
         url: `delete/${id}`,
         method: 'POST',
       }),

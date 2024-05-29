@@ -3,7 +3,6 @@ import { Box, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/auth';
 import routes from '../../routes';
 import { responseLoginType, statuses } from '../../types/response';

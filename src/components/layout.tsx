@@ -1,16 +1,11 @@
-import { Container, CssBaseline } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import type { ReactNode } from 'react';
 
 function Layout ({ children }: { children: ReactNode }) {
   return (
     <>
       <CssBaseline/>
-      <Container
-        maxWidth="lg"
-        component="main"
-      >
-        {children}
-      </Container>
+      {children}
     </>
   )
 }

@@ -8,7 +8,7 @@ function RemoveRowButton ({ id }: { id: TableElementType['id'] }) {
   ] = useRemoveRowMutation();
 
   return (
-    <IconButton aria-label="delete" onClick={() => {
+    <IconButton onClick={() => {
       remove(id);
     }}>
       <Delete />
