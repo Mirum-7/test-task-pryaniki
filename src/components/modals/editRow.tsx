@@ -1,60 +1,46 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Input, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useFormik } from 'formik';
-import { tableRowOrder, valueTypes } from '../../consts/table';
 import useModal from '../../hooks/modal';
 import { useEditRowMutation } from '../../store/slices/table';
-import { TableElementType, TableElementTypeNoId } from '../../types/table';
-import { parseCellValue, transformCellValue } from '../../utils/table';
-import { validationSchema } from './validationSchema';
+import { TableElementType } from '../../types/table';
+import { validationSchema } from '../../utils/shema/table';
+import BuildFields from './assets/buildFields';
+import { useState } from 'react';
+import { statuses } from '../../types/response';
+import { LoadingButton } from '@mui/lab';
 
 function ModalEditRow ({ opened, data }: { opened: boolean, data: TableElementType }) {
   const modal = useModal();
 
   const [
     editRow,
+    { isLoading },
   ] = useEditRowMutation();
 
+  const [error, setError] = useState('');
+
   const { id, ...rest } = data;
-  const initialValues = tableRowOrder.reduce<TableElementTypeNoId>((sub, cell) => {
-    sub[cell.prop] = parseCellValue(rest[cell.prop], cell.type);
-    return sub;
-  }, {} as TableElementTypeNoId);
 
   const formik = useFormik({
-    initialValues, 
+    initialValues: rest, 
     validationSchema,
     onSubmit(values) {
-        const transformedValue = tableRowOrder.reduce<TableElementTypeNoId>((sub, cell) => {
-          sub[cell.prop] = transformCellValue(values[cell.prop], cell.type);
-          return sub;
-        }, {} as TableElementTypeNoId);
-
-        editRow({
-          id: id,
-          data: transformedValue,
+      setError('');
+      editRow({
+        id: id,
+        data: values,
+      }).unwrap()
+        .then((response) => {
+          if(response.error_code === statuses.accessDeny) {
+            setError('Ошибка авторизации');
+            return;
+          }
+          modal.close();
+        }).catch(() => {
+          setError('Ошибка подключения');
         });
     },
   });
-
-  const inputs = tableRowOrder.map((cell) => {
-    switch (cell.type) {
-      case valueTypes.date: {
-        return <Input type='datetime-local' />
-      }
-      case valueTypes.string: {
-        return (
-          <TextField
-            id={cell.prop}
-            key={cell.prop}
-            name={cell.prop}
-            label={cell.label}
-            value={formik.values[cell.prop]}
-            margin="normal"
-          />
-        );
-      }
-    }
-  })
 
   return (
     <Dialog
@@ -73,12 +59,15 @@ function ModalEditRow ({ opened, data }: { opened: boolean, data: TableElementTy
           flexDirection: 'column',
           width: '500px',
         }}>
-          {inputs}
+          <BuildFields formik={formik}/>
         </DialogContent>
         <DialogActions>
-          <Button type="submit">
+          <Typography variant="body1" color="red">
+            {error}
+          </Typography>
+          <LoadingButton type="submit" loading={isLoading} disabled={isLoading}>
             Сохранить
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </form>
     </Dialog>

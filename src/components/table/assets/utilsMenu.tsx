@@ -1,10 +1,10 @@
 import { Delete, Edit, MoreVert } from '@mui/icons-material';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import { MouseEvent, useState } from 'react';
-import useModal from '../../../../hooks/modal';
-import { useRemoveRowMutation } from '../../../../store/slices/table';
-import { TableElementType } from '../../../../types/table';
-import { modalType } from '../../../../types/modal';
+import useModal from '../../../hooks/modal';
+import { useRemoveRowMutation } from '../../../store/slices/table';
+import { TableElementType } from '../../../types/table';
+import { modalType } from '../../../types/modal';
 
 function UtilsMenu ({ row }: { row: TableElementType }) {
   const [

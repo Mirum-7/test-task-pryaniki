@@ -1,15 +1,13 @@
-import { object, string } from 'yup';
+import { date, object, string } from 'yup';
 import { tableRowOrder, valueTypes } from '../../consts/table';
-
-const dateRegExp = /[0-3][0-9]\.[0-1][0-9].[0-9][0-9][0-9][0-9], [0-2][0-9]:[0-5][0-9]:[0-5][0-9]/
 
 function buildSchema (type: valueTypes) {
   switch (type) {
     case valueTypes.date: {
-      return string().matches(dateRegExp).required();
+      return date().required('Обязательно поле');
     }
     case valueTypes.string: {
-      return string().required();
+      return string().required('Обязательно поле');
     }
     default: {
       throw new Error(`unknown schema type: ${type}`);

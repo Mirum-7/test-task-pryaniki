@@ -1,18 +1,21 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useFormik } from 'formik';
-import { tableRowOrder } from '../../consts/table';
-import { useAddRowMutation } from '../../store/slices/table';
-import { TableElementTypeNoId } from '../../types/table';
 import useModal from '../../hooks/modal';
-import { transformCellValue } from '../../utils/table';
-import { validationSchema } from './validationSchema';
+import { useAddRowMutation } from '../../store/slices/table';
+import { validationSchema } from '../../utils/shema/table';
+import BuildFields from './assets/buildFields';
+import { TableElementTypeNoId } from '../../types/table';
+import { tableRowOrder } from '../../consts/table';
+import { useState } from 'react';
+import { statuses } from '../../types/response';
+import { LoadingButton } from '@mui/lab';
 
-function getInitialValues () {
-  const initialValues = {} as TableElementTypeNoId;
-  tableRowOrder.forEach((cell) => {
-    initialValues[cell.prop] = '';
-  })
-  return initialValues;
+function generateInitialValue(): TableElementTypeNoId {
+  const values = {} as TableElementTypeNoId;
+  for (let cell of tableRowOrder) {
+    values[cell.prop] = '';
+  }
+  return values;
 }
 
 function ModalAddRow ({ opened }: { opened: boolean }) {
@@ -20,34 +23,28 @@ function ModalAddRow ({ opened }: { opened: boolean }) {
 
   const [
     addRow,
+    {isLoading},
   ] = useAddRowMutation();
 
+  const [error, setError] = useState('')
+
   const formik = useFormik({
-    initialValues: getInitialValues(),
+    initialValues: generateInitialValue(),
     validationSchema,
     onSubmit(values) {
-      const transformedValue = tableRowOrder.reduce<TableElementTypeNoId>((sub, cell) => {
-        sub[cell.prop] = transformCellValue(values[cell.prop], cell.type);
-        return sub;
-      }, {} as TableElementTypeNoId);
-      addRow(transformedValue);
+      setError('');
+      addRow(values).unwrap()
+        .then((response) => {
+          if(response.error_code === statuses.accessDeny) {
+            setError('Ошибка авторизации');
+            return;
+          }
+          modal.close();
+        }).catch(() => {
+          setError('Ошибка подключения');
+        });;
     },
   });
-
-  const inputs = tableRowOrder.map((cell) => {
-    return (
-      <TextField
-        id={cell.prop}
-        key={cell.prop}
-        name={cell.prop}
-        label={cell.label}
-        value={formik.values[cell.prop]}
-        error={!!formik.errors[cell.prop]}
-        helperText={formik.errors[cell.prop]}
-        margin="normal"
-      />
-    )
-  })
 
   return (
     <Dialog
@@ -66,12 +63,15 @@ function ModalAddRow ({ opened }: { opened: boolean }) {
           flexDirection: 'column',
           width: '500px',
         }}>
-          {inputs}
+          <BuildFields formik={formik}/>
         </DialogContent>
         <DialogActions>
-          <Button type="submit">
+          <Typography variant="body1" color="red">
+            {error}
+          </Typography>
+          <LoadingButton type="submit" loading={isLoading} disabled={isLoading}>
             Сохранить
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </form>
     </Dialog>

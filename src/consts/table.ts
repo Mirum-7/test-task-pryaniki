@@ -1,12 +1,7 @@
-export enum valueTypes {
-  string,
-  date,
-}
 
-export type cell = {
-  prop: string,
-  type: valueTypes,
-  label: string,
+export enum valueTypes {
+  string = 'string',
+  date = 'date'
 }
 
 export const tableRowOrder = [
@@ -51,3 +46,11 @@ export const tableRowOrder = [
     label: 'Имя подписи сотрудников',
   },
 ] as const;
+
+export type tableRowOrderType = typeof tableRowOrder
+export type cell = tableRowOrderType[number]
+export type cellProps = cell['prop'];
+export type getType = {
+  [valueTypes.date]: Date,
+  [valueTypes.string]: string,
+}

@@ -10,17 +10,18 @@ function ModalProvider ({ children }: { children: ReactNode }) {
   });
 
   const open = useCallback(function({ type, data }: modalState) {
+    // TODO: fix types
     // Не смог исправить ошибку:
     // Тип "modalType" не может быть назначен для типа "modalType.addRow | modalType.editRow".
     // Вроде как type = addRow | editRow, тк opened = true
 
     // поставил директиву ожидания ошибки, пака не найду как решить проблему
     setState({
-    // @ts-expect-error
+      // @ts-ignore
       opened: true,
-    // @ts-expect-error
+      // @ts-ignore
       type,
-    // @ts-expect-error
+      // @ts-ignore
       data, 
     });
   }, []);

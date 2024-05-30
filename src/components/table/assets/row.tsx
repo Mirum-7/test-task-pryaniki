@@ -1,13 +1,13 @@
 import { TableCell, TableRow } from '@mui/material';
-import { TableElementType } from '../../../types/table';
 import { tableRowOrder } from '../../../consts/table';
+import { TableElementType } from '../../../types/table';
+import { parseDisplayCellValue } from '../../../utils/parse/table';
 import UtilsMenu from './utilsMenu';
-import { parseCellValue } from '../../../utils/table';
 
 function Row ({ row }: { row: TableElementType }) {
   const cells = tableRowOrder.map((cell) => {
     const value = row[cell.prop];
-    const parsedValue = parseCellValue(value, cell.type);
+    const parsedValue = parseDisplayCellValue(value, cell.type);
 
     return (
         <TableCell key={cell.prop}>

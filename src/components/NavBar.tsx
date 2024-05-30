@@ -8,7 +8,7 @@ function NavBar () {
   const auth = useAuth();
 
   return (
-    <AppBar>
+    <AppBar position="static">
       <Toolbar sx={{
         display: 'flex',
         justifyContent: 'space-between',
