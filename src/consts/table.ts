@@ -51,6 +51,6 @@ export type tableRowOrderType = typeof tableRowOrder
 export type cell = tableRowOrderType[number]
 export type cellProps = cell['prop'];
 export type getType = {
-  [valueTypes.date]: Date,
+  [valueTypes.date]: string,
   [valueTypes.string]: string,
 }
