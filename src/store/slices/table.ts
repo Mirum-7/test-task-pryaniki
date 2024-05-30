@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import routes from '../../routes';
-import { responseAddType, responseGetType, responseRemoveType } from '../../types/response';
-import { TableElementType } from '../../types/table';
+import { responseAddType, responseEitType, responseGetType, responseRemoveType } from '../../types/response';
+import { TableElementType, TableElementTypeNoId } from '../../types/table';
 
 
 function getTokenFromStorage () {
@@ -32,7 +32,7 @@ const tableApi = createApi({
       }),
       providesTags: ['table'],
     }),
-    addRow: builder.mutation<responseAddType, Omit<TableElementType, 'id'>>({
+    addRow: builder.mutation<responseAddType, TableElementTypeNoId>({
       query: (row) => ({
         url: 'create',
         method: 'POST',
@@ -47,6 +47,14 @@ const tableApi = createApi({
       }),
       invalidatesTags: ['table'],
     }),
+    editRow: builder.mutation<responseEitType, { id: TableElementType['id'], data: TableElementTypeNoId}>({
+      query: ({ id, data }) => ({
+        url: `set/${id}`,
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['table'],
+    }),
   })
 })
 
@@ -54,6 +62,7 @@ export const {
   useGetTableQuery,
   useAddRowMutation,
   useRemoveRowMutation,
+  useEditRowMutation,
 } = tableApi;
 export default tableApi;
 

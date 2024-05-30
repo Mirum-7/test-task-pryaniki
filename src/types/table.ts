@@ -10,6 +10,8 @@ export type TableElementType = {
   id: string,
 }
 
+export type TableElementTypeNoId = Omit<TableElementType, 'id'>
+
 type tableType = TableElementType[];
 
 export default tableType;

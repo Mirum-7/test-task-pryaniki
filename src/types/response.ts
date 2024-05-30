@@ -24,3 +24,4 @@ export type responseLoginType = response<{ token: string }>;
 export type responseGetType = response<tableType>;
 export type responseAddType = response<TableElementType>;
 export type responseRemoveType = response<void>;
+export type responseEitType = response<TableElementType>;

@@ -1,8 +1,12 @@
+import NavBar from '../components/NavBar';
 import CustomTable from '../components/table';
 
 function MainPage () {
   return (
-    <CustomTable/>
+    <main>
+      <NavBar/>
+      <CustomTable/>
+    </main>
   )
 }
 

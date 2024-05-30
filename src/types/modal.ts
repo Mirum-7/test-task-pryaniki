@@ -6,17 +6,19 @@ export enum modalType {
   none = 'none',
 }
 
-interface ModalTypeSelect<type> {
-  opened: boolean,
+interface ModalSelectType<opened extends boolean, type extends modalType, data> {
+  opened: opened,
   type: type,
+  data: data,
 }
-interface ModalEditRow extends ModalTypeSelect<modalType.editRow> {
-  opened: true,
-  data: TableElementType;
-}
-interface ModalOther extends ModalTypeSelect<Exclude<modalType, modalType.editRow>> {
-  data: null,
-}
+interface ModalClose extends ModalSelectType<false, modalType.none, null> {}
+
+interface ModalOpen<type extends Exclude<modalType, modalType.none>, data>
+  extends ModalSelectType<true, type, data> {}
+
+export interface ModalEditRow extends ModalOpen<modalType.editRow, TableElementType> {}
+export interface ModalAddRow extends ModalOpen<modalType.addRow, null> {}
 
 
-export type modalState = ModalEditRow | ModalOther;
+export type modalState = ModalAddRow | ModalEditRow | ModalClose;
+export type openModalState = ModalAddRow | ModalEditRow;
